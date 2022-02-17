@@ -38,7 +38,7 @@ jobs:
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
-        password: ${{ secrets.PASSWORD }}
+#        password: ${{ secrets.PASSWORD }}
         key: ${{ secrets.SSHKEY }}
         script: |
           cd ~/node-github-demo
