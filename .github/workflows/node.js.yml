@@ -34,12 +34,12 @@ jobs:
 
     steps:
     - name: SSH and deploy node app
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@0.1.3
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
-#        password: ${{ secrets.PASSWORD }}
-        key: ${{ secrets.SSHKEY }}
+        password: ${{ secrets.PASSWORD }}
+ #       key: ${{ secrets.SSHKEY }}
         script: |
           cd ~/node-github-demo
           git pull origin master
