@@ -1,0 +1,24 @@
+version: "3.6"
+
+services:
+  app:
+    tty: true
+    container_name: app
+    restart: unless-stopped
+    build: front
+    command: sh -c 'npm install && node app.js'
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./front:/var/www/html
+
+  api:
+    tty: true
+    container_name: api
+    restart: unless-stopped
+    build: api
+    command: sh -c 'npm install && node app.js'
+    ports:
+      - "9000:8080"
+    volumes:
+      - ./api:/var/www/html
