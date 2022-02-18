@@ -52,7 +52,7 @@ jobs:
       run: doctl registry login --expiry-seconds 600
       
     - name: Tag image 
-      run: docker tag $(echo $IMAGE_NAME) $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest:latest
+      run: docker tag $(echo $IMAGE_NAME) $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest
       working-directory: ./api
 
     - name: Push image to DigitalOcean Container Registry
