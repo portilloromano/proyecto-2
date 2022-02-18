@@ -3,8 +3,12 @@ name: CI / CD
 on:
   push:
     branches: [main]
-    paths:
-      - 'api/**'
+#    paths:
+ #     - 'api/**'
+ 
+env:
+  REGISTRY: "registry.digitalocean.com/develop-project"
+  IMAGE_NAME: "api"
 
 jobs:
   test:
@@ -29,6 +33,7 @@ jobs:
         CI: true
 
   build_and_push:
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repo 
@@ -47,7 +52,7 @@ jobs:
       run: doctl registry login --expiry-seconds 600
       
     - name: Tag image 
-      run: docker tag $(echo $IMAGE_NAME) $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest:latest
+      run: docker tag $(echo $IMAGE_NAME) $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest
       working-directory: ./api
 
     - name: Push image to DigitalOcean Container Registry
@@ -55,7 +60,7 @@ jobs:
       working-directory: ./api
 
   # deploy:
-  #   needs: [test]
+  #   needs: [build_and_push]
   #   runs-on: ubuntu-latest
 
   #   steps:
