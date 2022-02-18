@@ -28,19 +28,45 @@ jobs:
       env:
         CI: true
 
-  deploy:
-    needs: [test]
+  build_and_push:
     runs-on: ubuntu-latest
-
     steps:
-    - name: SSH and deploy node app
-      uses: garygrossgarten/github-action-ssh@release
+    - name: Checkout the repo 
+      uses: actions/checkout@v2
+      
+    - name: Build container image
+      run: docker build -t api-pre .
+      working-directory: ./api
+
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
       with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        script: |
-          cd ~/api
-          git pull origin master
-          npm install --production
-          pm2 restart app.js
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+    - name: Log in to DigitalOcean Container Registry with short-lived credentials
+      run: doctl registry login --expiry-seconds 600
+      
+    - name: Tag image 
+      run: docker tag $(echo $IMAGE_NAME) $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest:latest
+      working-directory: ./api
+
+    - name: Push image to DigitalOcean Container Registry
+      run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest
+      working-directory: ./api
+
+  # deploy:
+  #   needs: [test]
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - name: SSH and deploy node app
+  #     uses: garygrossgarten/github-action-ssh@release
+  #     with:
+  #       host: ${{ secrets.SSH_HOST }}
+  #       username: ${{ secrets.SSH_USERNAME }}
+  #       password: ${{ secrets.PASSWORD }}
+  #       script: |
+  #         cd ~/api
+  #         git pull origin master
+  #         npm install --production
+  #         pm2 restart app.js
