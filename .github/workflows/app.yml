@@ -4,11 +4,11 @@ on:
   push:
     branches: [main]
     paths:
-    - 'api/**'
+    - 'front/**'
  
 env:
   REGISTRY: "registry.digitalocean.com/develop-project"
-  IMAGE_NAME: "api"
+  IMAGE_NAME: "app"
 
 jobs:
   test:
@@ -28,7 +28,7 @@ jobs:
       run: |
         npm install
         npm test
-      working-directory: ./api
+      working-directory: ./front
       env:
         CI: true
 
@@ -41,7 +41,7 @@ jobs:
       
     - name: Build container image
       run: docker build -t api .
-      working-directory: ./api
+      working-directory: ./front
 
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: SSH and deploy node api
+    - name: SSH and deploy node app
       uses: garygrossgarten/github-action-ssh@release
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -74,6 +74,6 @@ jobs:
           rm -rf proyecto-2
           git clone https://github.com/portilloromano/proyecto-2.git
           cd github-actions-deploy-compose-project
-          docker stop api
-          docker rm api
-          docker-compose up -d api
+          docker stop app
+          docker rm app
+          docker-compose up -d app
