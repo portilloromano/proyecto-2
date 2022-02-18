@@ -35,4 +35,4 @@ it("response with json containing a random phrase", (done) => {
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(200, done);
-});
+}); 
