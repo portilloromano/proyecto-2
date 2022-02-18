@@ -5,6 +5,10 @@ on:
     branches: [main]
 #    paths:
  #     - 'api/**'
+ 
+env:
+  REGISTRY: "registry.digitalocean.com/develop-project"
+  IMAGE_NAME: "api"
 
 jobs:
   test:
