@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../index");
+const app = require("../app");
 
 it("response with json containing a list of all phrases", (done) => {
     request(app)
